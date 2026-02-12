@@ -13,7 +13,7 @@ const chrome = require('selenium-webdriver/chrome');
 
     try {
 
-        await driver.get("http://127.0.0.1:5500/saep_front/");
+        await driver.get("https://smiguelrbr.github.io/SAEP-Front/");
 
         // LOGIN
         await driver.wait(until.elementLocated(By.id('cpf')), 5000);
