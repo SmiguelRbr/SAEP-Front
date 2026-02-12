@@ -1,64 +1,106 @@
 const { Builder, By, until } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 
-
 (async function testFlow() {
 
-    let options = new chrome.Options();
-    options.addArguments('--log-level=3'); // remove logs chatos
+    let optionsChrome = new chrome.Options();
+    optionsChrome.addArguments('--log-level=3');
 
     let driver = await new Builder()
         .forBrowser('chrome')
-        .setChromeOptions(options)
+        .setChromeOptions(optionsChrome)
         .build();
-
 
     try {
 
-        await driver.get("https://smiguelrbr.github.io/SAEP-Front/");
+        await driver.get("http://127.0.0.1:5500/saep_front/");
 
+        // LOGIN
         await driver.wait(until.elementLocated(By.id('cpf')), 5000);
 
         await driver.findElement(By.id('cpf')).sendKeys('12345678901');
         await driver.findElement(By.id('password')).sendKeys('1234');
 
-        console.log("Login preenchido");
-
         await driver.findElement(By.className('login-btn')).click();
 
-        console.log("Login clicado");
-
-        // 👇 CAPTURAR ALERT
+        // ALERT
         await driver.wait(until.alertIsPresent(), 5000);
-
         let alert = await driver.switchTo().alert();
+        await alert.accept();
 
-        console.log("Texto do alert:", await alert.getText());
-
-        await alert.accept(); // clicar OK
-
-        console.log("Alert fechado");
-
-        // esperar redirecionamento
+        // IR PARA QUESTÕES
         await driver.wait(until.urlContains('questions'), 5000);
 
-        console.log("Redirecionou OK");
+        console.log("Entrou nas questões");
 
-        await driver.wait(until.elementLocated(By.css('.option')), 5000);
+        let numeroQuestao = 1;
 
-        let option = await driver.findElement(By.css('.option'));
-        await option.click();
+        while (true) {
 
-        console.log("Selecionou alternativa");
+            console.log(`Respondendo questão ${numeroQuestao}`);
 
-        await driver.findElement(By.id('nextBtn')).click();
+            // numero atual
+            let numeroSpan = await driver.findElement(By.id('current-number'));
+            let numeroAtual = await numeroSpan.getText();
 
-        console.log("Próxima OK");
+            // esperar alternativas
+            await driver.wait(until.elementLocated(By.css('.option')), 5000);
 
-        await driver.sleep(3000);
+            let options = await driver.findElements(By.css('.option'));
+
+            // clicar primeira alternativa
+            await options[0].click();
+
+            await driver.sleep(1500);
+
+            // clicar próxima
+            let nextBtn = await driver.findElement(By.id('nextBtn'));
+            await nextBtn.click();
+
+            // tentar detectar mudança
+            let mudou = false;
+
+            try {
+
+                await driver.wait(async () => {
+
+                    let novoNumero = await driver.findElement(By.id('current-number')).getText();
+                    return novoNumero !== numeroAtual;
+
+                }, 2000);
+
+                mudou = true;
+
+            } catch {
+
+                mudou = false;
+
+            }
+
+            // se não mudou → última questão
+            if (!mudou) {
+
+                console.log("Última questão detectada");
+
+                let finishBtn = await driver.findElement(By.id('finishBtn'));
+                await finishBtn.click();
+
+                break;
+            }
+
+            numeroQuestao++;
+
+            await driver.sleep(1200);
+        }
+
+        console.log("Prova finalizada");
+
+        await driver.sleep(5000);
 
     } finally {
+
         await driver.quit();
+
     }
 
 })();
