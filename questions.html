@@ -1,249 +1,249 @@
-<!DOCTYPE html>
-<html lang="en">
+    <!DOCTYPE html>
+    <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Document</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+        <title>Document</title>
+    </head>
 
-<body>
-    <header>
-        <div class="top-header">
-            <p>SATE: Sistema de Aplicação de Testes Eletrônicos</p>
-        </div>
-
-        <div class="middle-header">
-            <img src="https://www.inoversasul.org/wp-content/uploads/2025/08/cebaspe1.png" alt="">
-            <div class="middle-titles">
-                <h3>Avaliação de Desempenho de Estudante ANO - ETAPA</h3>
-                <p>Nome do Aluno (CPF) | CARGO | <a href="">Sair</a></p>
-            </div>
-            <img src="https://logopng.com.br/logos/senai-165.png" alt="">
-        </div>
-
-        <div class="header-footer">
-            <p>Desenvolvimento de Sistemas</p>
-        </div>
-    </header>
-
-    <aside>
-        <h4>Restam: H h M min</h4>
-        <div class="resumo-prova">
-            <p class="title">Resumo da Prova</p>
-            <div class="respondidas">
-                <div class="circle" id="answered-count">0</div>
-                <p>Questões respondidas</p>
+    <body>
+        <header>
+            <div class="top-header">
+                <p>SATE: Sistema de Aplicação de Testes Eletrônicos</p>
             </div>
 
-            <div class="nao-respondidas">
-                <div class="circle" id="blank-count">0</div>
-                <p>Questões em branco</p>
+            <div class="middle-header">
+                <img src="https://www.inoversasul.org/wp-content/uploads/2025/08/cebaspe1.png" alt="">
+                <div class="middle-titles">
+                    <h3>Avaliação de Desempenho de Estudante ANO - ETAPA</h3>
+                    <p>Nome do Aluno (CPF) | CARGO | <a href="">Sair</a></p>
+                </div>
+                <img src="https://logopng.com.br/logos/senai-165.png" alt="">
             </div>
-        </div>
 
-        <div class="questoes-prova">
-            <p>Questões da prova</p>
-            <!-- container dinâmico das questões -->
-            <div class="questoes-example-container" id="quest-list"></div>
+            <div class="header-footer">
+                <p>Desenvolvimento de Sistemas</p>
+            </div>
+        </header>
 
-        </div>
+        <aside>
+            <h4>Restam: H h M min</h4>
+            <div class="resumo-prova">
+                <p class="title">Resumo da Prova</p>
+                <div class="respondidas">
+                    <div class="circle" id="answered-count">0</div>
+                    <p>Questões respondidas</p>
+                </div>
 
-        <div class="aside-footer">
-            <button id="finishBtn">Finalizar prova</button>
+                <div class="nao-respondidas">
+                    <div class="circle" id="blank-count">0</div>
+                    <p>Questões em branco</p>
+                </div>
+            </div>
 
-            <img src="https://icones.pro/wp-content/uploads/2021/05/icone-point-d-interrogation-question-noir.png"
-                alt="">
-        </div>
-    </aside>
+            <div class="questoes-prova">
+                <p>Questões da prova</p>
+                <!-- container dinâmico das questões -->
+                <div class="questoes-example-container" id="quest-list"></div>
 
-    <main>
-        <div class="quest">Questão <span id="current-number">1</span> - Desenvolvimento de Sistemas</div>
+            </div>
 
-        <div class="pergunta" id="question-text">
-        </div>
+            <div class="aside-footer">
+                <button id="finishBtn">Finalizar prova</button>
 
-        <div class="questions" id="options-container">
-        </div>
+                <img src="https://icones.pro/wp-content/uploads/2021/05/icone-point-d-interrogation-question-noir.png"
+                    alt="">
+            </div>
+        </aside>
 
-        <div style="padding:12px; display:flex; gap:8px;">
-            <button id="prevBtn">Anterior</button>
-            <button id="nextBtn">Próxima</button>
-            <button id="clearBtn">Apagar Resposta</button>
-        </div>
+        <main>
+            <div class="quest">Questão <span id="current-number">1</span> - Desenvolvimento de Sistemas</div>
 
-    </main>
+            <div class="pergunta" id="question-text">
+            </div>
 
-    <script>
-       
-        const questions = [
-            {
-                text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. (Questão 1)',
-                options: [
-                    'Alternativa A - resposta 1',
-                    'Alternativa B - resposta 1',
-                    'Alternativa C - resposta 1',
-                    'Alternativa D - resposta 1',
-                    'Alternativa E - resposta 1'
-                ]
-            },
-            {
-                text: 'Lorem ipsum dolor sit amet... (Questão 2)',
-                options: ['A2', 'B2', 'C2', 'D2', 'E2']
-            },
-            {
-                text: 'Enunciado da questão 3',
-                options: ['A3', 'B3', 'C3', 'D3', 'E3']
-            },
-            {
-                text: 'Enunciado da questão 4',
-                options: ['A4', 'B4', 'C4', 'D4', 'E4']
-            },
-            {
-                text: 'Enunciado da questão 5',
-                options: ['A5', 'B5', 'C5', 'D5', 'E5']
-            },
-            {
-                text: 'Enunciado da questão 6',
-                options: ['A6', 'B6', 'C6', 'D6', 'E6']
-            }
-        ];
+            <div class="questions" id="options-container">
+            </div>
 
-        let currentIndex = 0;
-        const answers = Array(questions.length).fill(null);
+            <div style="padding:12px; display:flex; gap:8px;">
+                <button id="prevBtn">Anterior</button>
+                <button id="nextBtn">Próxima</button>
+                <button id="clearBtn">Apagar Resposta</button>
+            </div>
+
+        </main>
+
+        <script>
         
-        const statuses = Array(questions.length).fill('unvisited');
-
-        const qText = document.getElementById('question-text');
-        const optionsContainer = document.getElementById('options-container');
-        const currentNumber = document.getElementById('current-number');
-        const questList = document.getElementById('quest-list');
-        const answeredCountEl = document.getElementById('answered-count');
-        const blankCountEl = document.getElementById('blank-count');
-
-        function renderQuestion(i) {
-            const q = questions[i];
-            currentNumber.textContent = i + 1;
-            qText.textContent = q.text;
-            optionsContainer.innerHTML = '';
-
-            q.options.forEach((opt, idx) => {
-                const wrap = document.createElement('div');
-                wrap.className = 'question-letter option';
-                wrap.dataset.optionIndex = idx;
-
-                const circle = document.createElement('div');
-                circle.className = 'question-circles';
-                circle.textContent = String.fromCharCode(97 + idx); // a,b,c...
-
-                const p = document.createElement('p');
-                p.innerHTML = opt;
-
-                wrap.appendChild(circle);
-                wrap.appendChild(p);
-
-                wrap.addEventListener('click', () => {
-                    answers[currentIndex] = idx;
-                    statuses[currentIndex] = 'answered';
-                    renderQuestion(currentIndex);
-                    renderAside();
-                    updateSummary();
-                    updateClearButton();
-                });
-
-                if (answers[i] === idx) {
-                    wrap.classList.add('selected');
+            const questions = [
+                {
+                    text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. (Questão 1)',
+                    options: [
+                        'Alternativa A - resposta 1',
+                        'Alternativa B - resposta 1',
+                        'Alternativa C - resposta 1',
+                        'Alternativa D - resposta 1',
+                        'Alternativa E - resposta 1'
+                    ]
+                },
+                {
+                    text: 'Lorem ipsum dolor sit amet... (Questão 2)',
+                    options: ['A2', 'B2', 'C2', 'D2', 'E2']
+                },
+                {
+                    text: 'Enunciado da questão 3',
+                    options: ['A3', 'B3', 'C3', 'D3', 'E3']
+                },
+                {
+                    text: 'Enunciado da questão 4',
+                    options: ['A4', 'B4', 'C4', 'D4', 'E4']
+                },
+                {
+                    text: 'Enunciado da questão 5',
+                    options: ['A5', 'B5', 'C5', 'D5', 'E5']
+                },
+                {
+                    text: 'Enunciado da questão 6',
+                    options: ['A6', 'B6', 'C6', 'D6', 'E6']
                 }
+            ];
 
-                optionsContainer.appendChild(wrap);
-            });
-            updateClearButton();
-        }
+            let currentIndex = 0;
+            const answers = Array(questions.length).fill(null);
+            
+            const statuses = Array(questions.length).fill('unvisited');
 
-        function renderAside() {
-            questList.innerHTML = '';
-            questions.forEach((_, idx) => {
-                const btn = document.createElement('div');
-                btn.className = 'circle-question-example question-button';
-                btn.textContent = idx + 1;
-                // status-based classes
-                if (statuses[idx] === 'answered' || answers[idx] !== null) btn.classList.add('answered');
-                if (statuses[idx] === 'skipped' && answers[idx] === null) btn.classList.add('skipped');
-                if (idx === currentIndex) btn.classList.add('current');
-                btn.addEventListener('click', () => {
-                    currentIndex = idx;
-                    renderQuestion(currentIndex);
-                    renderAside();
+            const qText = document.getElementById('question-text');
+            const optionsContainer = document.getElementById('options-container');
+            const currentNumber = document.getElementById('current-number');
+            const questList = document.getElementById('quest-list');
+            const answeredCountEl = document.getElementById('answered-count');
+            const blankCountEl = document.getElementById('blank-count');
+
+            function renderQuestion(i) {
+                const q = questions[i];
+                currentNumber.textContent = i + 1;
+                qText.textContent = q.text;
+                optionsContainer.innerHTML = '';
+
+                q.options.forEach((opt, idx) => {
+                    const wrap = document.createElement('div');
+                    wrap.className = 'question-letter option';
+                    wrap.dataset.optionIndex = idx;
+
+                    const circle = document.createElement('div');
+                    circle.className = 'question-circles';
+                    circle.textContent = String.fromCharCode(97 + idx); // a,b,c...
+
+                    const p = document.createElement('p');
+                    p.innerHTML = opt;
+
+                    wrap.appendChild(circle);
+                    wrap.appendChild(p);
+
+                    wrap.addEventListener('click', () => {
+                        answers[currentIndex] = idx;
+                        statuses[currentIndex] = 'answered';
+                        renderQuestion(currentIndex);
+                        renderAside();
+                        updateSummary();
+                        updateClearButton();
+                    });
+
+                    if (answers[i] === idx) {
+                        wrap.classList.add('selected');
+                    }
+
+                    optionsContainer.appendChild(wrap);
                 });
-                questList.appendChild(btn);
+                updateClearButton();
+            }
+
+            function renderAside() {
+                questList.innerHTML = '';
+                questions.forEach((_, idx) => {
+                    const btn = document.createElement('div');
+                    btn.className = 'circle-question-example question-button';
+                    btn.textContent = idx + 1;
+                    // status-based classes
+                    if (statuses[idx] === 'answered' || answers[idx] !== null) btn.classList.add('answered');
+                    if (statuses[idx] === 'skipped' && answers[idx] === null) btn.classList.add('skipped');
+                    if (idx === currentIndex) btn.classList.add('current');
+                    btn.addEventListener('click', () => {
+                        currentIndex = idx;
+                        renderQuestion(currentIndex);
+                        renderAside();
+                    });
+                    questList.appendChild(btn);
+                });
+            }
+
+            function updateSummary() {
+                const answered = statuses.filter(s => s === 'answered').length;
+                const blank = answers.filter(a => a === null).length;
+                answeredCountEl.textContent = answered;
+                blankCountEl.textContent = blank;
+            }
+
+            function updateClearButton() {
+                const clearBtn = document.getElementById('clearBtn');
+                if (answers[currentIndex] !== null) {
+                    clearBtn.style.display = 'inline-block';
+                } else {
+                    clearBtn.style.display = 'none';
+                }
+            }
+
+            document.getElementById('nextBtn').addEventListener('click', () => {
+
+                if (answers[currentIndex] === null) {
+                    statuses[currentIndex] = 'skipped';
+                } else {
+                    statuses[currentIndex] = 'answered';
+                }
+                if (currentIndex < questions.length - 1) currentIndex++;
+                renderQuestion(currentIndex);
+                renderAside();
+                updateSummary();
             });
-        }
 
-        function updateSummary() {
-            const answered = statuses.filter(s => s === 'answered').length;
-            const blank = answers.filter(a => a === null).length;
-            answeredCountEl.textContent = answered;
-            blankCountEl.textContent = blank;
-        }
+            document.getElementById('prevBtn').addEventListener('click', () => {
+                if (currentIndex > 0) currentIndex--;
+                renderQuestion(currentIndex);
+                renderAside();
+            });
 
-        function updateClearButton() {
-            const clearBtn = document.getElementById('clearBtn');
-            if (answers[currentIndex] !== null) {
-                clearBtn.style.display = 'inline-block';
-            } else {
-                clearBtn.style.display = 'none';
-            }
-        }
+            document.getElementById('clearBtn').addEventListener('click', () => {
+                answers[currentIndex] = null;
+                statuses[currentIndex] = 'unvisited';
+                renderQuestion(currentIndex);
+                renderAside();
+                updateSummary();
+            });
 
-        document.getElementById('nextBtn').addEventListener('click', () => {
+            document.getElementById('finishBtn').addEventListener('click', () => {
+                alert('Finalizar prova (simulação). Respostas: ' + JSON.stringify(answers));
+            });
 
-            if (answers[currentIndex] === null) {
-                statuses[currentIndex] = 'skipped';
-            } else {
-                statuses[currentIndex] = 'answered';
-            }
-            if (currentIndex < questions.length - 1) currentIndex++;
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .option { cursor: pointer; padding:8px; }
+                .option.selected { background:#fff2d1; border-radius:6px; }
+                /* when an option is selected, make its letter circle black */
+                .option.selected .question-circles { background:black; color:white; }
+                .question-button { cursor:pointer; width:30px; height:30px; display:inline-flex; justify-content:center; align-items:center; margin:4px; border-radius:50%; border:1px solid rgb(35,49,177); }
+                .question-button.answered { background:black; color:white; border-color:black; }
+                .question-button.skipped { background:red; color:white; border-color:red; }
+                .question-button.current { background:rgb(35,49,177); color:#fff; border-color:rgb(35,49,177); box-shadow:0 0 0 3px rgba(35,49,177,0.12); }
+            `;
+            document.head.appendChild(style);
+
             renderQuestion(currentIndex);
             renderAside();
             updateSummary();
-        });
+        </script>
+    </body>
 
-        document.getElementById('prevBtn').addEventListener('click', () => {
-            if (currentIndex > 0) currentIndex--;
-            renderQuestion(currentIndex);
-            renderAside();
-        });
-
-        document.getElementById('clearBtn').addEventListener('click', () => {
-            answers[currentIndex] = null;
-            statuses[currentIndex] = 'unvisited';
-            renderQuestion(currentIndex);
-            renderAside();
-            updateSummary();
-        });
-
-        document.getElementById('finishBtn').addEventListener('click', () => {
-            alert('Finalizar prova (simulação). Respostas: ' + JSON.stringify(answers));
-        });
-
-        const style = document.createElement('style');
-        style.innerHTML = `
-            .option { cursor: pointer; padding:8px; }
-            .option.selected { background:#fff2d1; border-radius:6px; }
-            /* when an option is selected, make its letter circle black */
-            .option.selected .question-circles { background:black; color:white; }
-            .question-button { cursor:pointer; width:30px; height:30px; display:inline-flex; justify-content:center; align-items:center; margin:4px; border-radius:50%; border:1px solid rgb(35,49,177); }
-            .question-button.answered { background:black; color:white; border-color:black; }
-            .question-button.skipped { background:red; color:white; border-color:red; }
-            .question-button.current { background:rgb(35,49,177); color:#fff; border-color:rgb(35,49,177); box-shadow:0 0 0 3px rgba(35,49,177,0.12); }
-        `;
-        document.head.appendChild(style);
-
-        renderQuestion(currentIndex);
-        renderAside();
-        updateSummary();
-    </script>
-</body>
-
-</html>
+    </html>
