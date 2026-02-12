@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <link rel="stylesheet" href="login-style.css">
+    <title>SATE - Login</title>
 </head>
 
 <body>
@@ -15,88 +15,149 @@
         </div>
 
         <div class="middle-header">
-            <img src="https://www.inoversasul.org/wp-content/uploads/2025/08/cebaspe1.png"
-                alt="">
+            <img src="https://www.inoversasul.org/wp-content/uploads/2025/08/cebaspe1.png" alt="CEBASPE">
             <div class="middle-titles">
-                <h3>Avaliação de Desempenho de Estudante ANO - ETAPA</h3>
-                <p>Nome do Aluno (CPF) | CARGO | <a href="">Sair</a></p>
+                <h3>Sistema de Avaliação Online</h3>
+                <p>Acesse sua conta para realizar as avaliações</p>
             </div>
-            <img src="https://logopng.com.br/logos/senai-165.png" alt="">
-        </div>
-
-        <div class="header-footer">
-            <p>Desenvolvimento de Sistemas</p>
-        </div>
-    </header>
-
-    <aside>
-        <h4>Restam: H h M min</h4>
-        <div class="resumo-prova">
-            <p class="title">Resumo da Prova</p>
-            <div class="respondidas">
-                <div class="circle">0</div>
-                <p>Questões respondidas</p>
-            </div>
-
-            <div class="nao-respondidas">
-                <div class="circle">0</div>
-                <p>Questões em branco</p>
-            </div>
-        </div>
-
-        <div class="questoes-prova">
-            <p>Questões da prova</p>
-            <!-- foreach das quesões -->
-            <div class="circle-question-example">0</div>
-        </div>
-
-        <div class="aside-footer">
-            <button>Finalizar prova</button>
-
-            <img src="https://icones.pro/wp-content/uploads/2021/05/icone-point-d-interrogation-question-noir.png"
-                alt="">
-        </div>
-    </aside>
-
-    <main>
-        <div class="quest">Questão numero - Desenvolvimento de Sistemas</div>
-
-        <div class="pergunta">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum suscipit reprehenderit unde repellendus non
-            voluptatibus repellat ex pariatur ad, totam accusamus, modi corporis facilis quisquam iste quod distinctio!
-            Porro, quas.
-        </div>
-
-        <div class="questions">
-            <div class="question-letter">
-                <div class="question-circles">a</div>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi dolorum atque totam possimus vel mollitia tenetur dolores ipsum quibusdam cupiditate odio repudiandae veniam provident minus quaerat, rem enim libero praesentium?</p>
-            </div>
-
-            <div class="question-letter">
-                <div class="question-circles">b</div>
-                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi dolorum atque totam possimus vel mollitia tenetur dolores ipsum quibusdam cupiditate odio repudiandae veniam provident minus quaerat, rem enim libero praesentium?</p>
-            </div>
-
-            <div class="question-letter">
-                <div class="question-circles">c</div>
-                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi dolorum atque totam possimus vel mollitia tenetur dolores ipsum quibusdam cupiditate odio repudiandae veniam provident minus quaerat, rem enim libero praesentium?</p>
-            </div>
-
-            <div class="question-letter">
-                <div class="question-circles">d</div>
-                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi dolorum atque totam possimus vel mollitia tenetur dolores ipsum quibusdam cupiditate odio repudiandae veniam provident minus quaerat, rem enim libero praesentium?</p>
-            </div>
-
-            <div class="question-letter">
-                <div class="question-circles">e</div>
-                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi dolorum atque totam possimus vel mollitia tenetur dolores ipsum quibusdam cupiditate odio repudiandae veniam provident minus quaerat, rem enim libero praesentium?</p>
-            </div>
-            <button>Apagar Resposta</button>
+            <img src="https://logopng.com.br/logos/senai-165.png" alt="SENAI">
         </div>
 
         
+    </header>
+
+    <main>
+        <div class="login-container">
+            <div class="login-box">
+                <h2>Acesso ao Sistema</h2>
+                <p class="subtitle">Digite suas credenciais para continuar</p>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="cpf">CPF</label>
+                        <input 
+                            type="text" 
+                            id="cpf" 
+                            name="cpf" 
+                            placeholder="000.000.000-00"
+                            maxlength="14"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Senha</label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Digite sua senha"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="remember">
+                            <span>Lembrar-me</span>
+                        </label>
+                        <a href="#" class="forgot-password">Esqueci minha senha</a>
+                    </div>
+
+                    <button type="submit" class="login-btn">Entrar</button>
+
+                    <div class="divider">
+                        <span>ou</span>
+                    </div>
+
+                    <button type="button" class="register-btn">Criar nova conta</button>
+                </form>
+
+                <div class="help-section">
+                    <img src="https://icones.pro/wp-content/uploads/2021/05/icone-point-d-interrogation-question-noir.png" 
+                         alt="Ajuda">
+                    <p>Precisa de ajuda? <a href="#">Clique aqui</a></p>
+                </div>
+            </div>
+
+            <div class="info-panel">
+                <div class="info-box">
+                    <h3>Bem-vindo ao SATE</h3>
+                    <p>Sistema completo para aplicação de avaliações eletrônicas com:</p>
+                    <ul>
+                        <li>Interface intuitiva e fácil de usar</li>
+                        <li>Acompanhamento em tempo real</li>
+                        <li>Cronômetro de prova automático</li>
+                        <li>Navegação entre questões</li>
+                        <li>Segurança e confiabilidade</li>
+                    </ul>
+                </div>
+
+                <div class="info-box requirements">
+                    <h4>Requisitos do Sistema</h4>
+                    <p>✓ Navegador atualizado (Chrome, Firefox, Edge)</p>
+                    <p>✓ Conexão estável com a internet</p>
+                    <p>✓ JavaScript habilitado</p>
+                </div>
+            </div>
+        </div>
     </main>
+
+    <footer>
+        <p>&copy; 2025 SATE - Todos os direitos reservados | <a href="#">Política de Privacidade</a> | <a href="#">Termos de Uso</a></p>
+    </footer>
+
+    <script>
+        // Máscara de CPF
+        const cpfInput = document.getElementById('cpf');
+        cpfInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+                e.target.value = value;
+            }
+        });
+
+        // Validação do formulário
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const cpf = document.getElementById('cpf').value;
+            const password = document.getElementById('password').value;
+            
+            // Validação básica
+            if (cpf.replace(/\D/g, '').length !== 11) {
+                alert('CPF inválido! Digite um CPF completo.');
+                return;
+            }
+            
+            if (password.length < 4) {
+                alert('Senha muito curta! Digite uma senha válida.');
+                return;
+            }
+            
+            // Simulação de login
+            console.log('Login attempt:', { cpf, password });
+            alert('Login realizado com sucesso!\n\nCPF: ' + cpf);
+            
+            // Aqui você redirecionaria para a página da prova
+            window.location.href = 'questions.html';
+        });
+
+        // Botão de registro
+        document.querySelector('.register-btn').addEventListener('click', function() {
+            alert('Funcionalidade de registro em desenvolvimento.\n\nPara criar uma conta, entre em contato com a administração.');
+        });
+
+        // Link esqueci senha
+        document.querySelector('.forgot-password').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Para recuperar sua senha, entre em contato com:\n\nsuporte@sate.com.br\n(11) 1234-5678');
+        });
+    </script>
 </body>
 
 </html>

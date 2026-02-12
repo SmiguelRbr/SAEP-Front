@@ -282,3 +282,13 @@ main {
     color: #333;
     line-height: 1.4;
 }
+
+.questoes-example-container{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 200px;
+    transform: translateX(-15px);
+    gap: 10px;
+    flex-wrap: wrap;
+}
