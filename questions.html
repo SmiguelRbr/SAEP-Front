@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title>SATE - Prova</title>
 </head>
 
 <body>
@@ -17,8 +17,8 @@
         <div class="middle-header">
             <img src="https://www.inoversasul.org/wp-content/uploads/2025/08/cebaspe1.png" alt="">
             <div class="middle-titles">
-                <h3>Avaliação de Desempenho de Estudante ANO - ETAPA</h3>
-                <p>Nome do Aluno (CPF) | CARGO | <a href="">Sair</a></p>
+                <h3>Avaliação de Desempenho de Estudante IDEV3</h3>
+                <p>Nome do Aluno | Biston | <a href="">Sair</a></p>
             </div>
             <img src="https://logopng.com.br/logos/senai-165.png" alt="">
         </div>
@@ -45,14 +45,11 @@
 
         <div class="questoes-prova">
             <p>Questões da prova</p>
-            <!-- container dinâmico das questões -->
             <div class="questoes-example-container" id="quest-list"></div>
-
         </div>
 
         <div class="aside-footer">
             <button id="finishBtn">Finalizar prova</button>
-
             <img src="https://icones.pro/wp-content/uploads/2021/05/icone-point-d-interrogation-question-noir.png"
                 alt="">
         </div>
@@ -61,11 +58,9 @@
     <main>
         <div class="quest">Questão <span id="current-number">1</span> - Desenvolvimento de Sistemas</div>
 
-        <div class="pergunta" id="question-text">
-        </div>
+        <div class="pergunta" id="question-text"></div>
 
-        <div class="questions" id="options-container">
-        </div>
+        <div class="questions" id="options-container"></div>
 
         <div style="padding:12px; display:flex; gap:8px;">
             <button id="prevBtn">Anterior</button>
@@ -74,22 +69,20 @@
         </div>
 
     </main>
+
     <div id="resultModal" class="modal">
         <div class="modal-box">
-
             <div class="modal-header">
                 <h2>Resultado da Avaliação</h2>
                 <button id="closeModal">✕</button>
             </div>
 
             <div class="result-grid">
-
                 <div class="chart-area">
                     <canvas id="resultChart"></canvas>
                 </div>
 
                 <div class="stats-area">
-
                     <div class="stat-card success">
                         <h3 id="correctCount">0</h3>
                         <p>Acertos</p>
@@ -104,60 +97,82 @@
                         <h3 id="percentCount">0%</h3>
                         <p>Aproveitamento</p>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
     </div>
-    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-
-        const questions = [
-            {
-                text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. (Questão 1)',
-                correct: 1,
-                options: [
-                    'Alternativa A - resposta 1',
-                    'Alternativa B - resposta 1',
-                    'Alternativa C - resposta 1',
-                    'Alternativa D - resposta 1',
-                    'Alternativa E - resposta 1'
-                ]
-            },
-            {
-                text: 'Lorem ipsum dolor sit amet... (Questão 2)',
-                correct: 0,
-                options: ['A2', 'B2', 'C2', 'D2', 'E2']
-            },
-            {
-                text: 'Enunciado da questão 3',
-                correct: 2,
-                options: ['A3', 'B3', 'C3', 'D3', 'E3']
-            },
-            {
-                text: 'Enunciado da questão 4',
-                correct: 3,
-                options: ['A4', 'B4', 'C4', 'D4', 'E4']
-            },
-            {
-                text: 'Enunciado da questão 5',
-                correct: 1,
-                options: ['A5', 'B5', 'C5', 'D5', 'E5']
-            },
-            {
-                text: 'Enunciado da questão 6',
-                correct: 4,
-                options: ['A6', 'B6', 'C6', 'D6', 'E6']
-            }
-        ];
-
+        let questions = [];
         let currentIndex = 0;
-        const answers = Array(questions.length).fill(null);
-        const statuses = Array(questions.length).fill('unvisited');
+        let answers = [];
+        let statuses = [];
+
+        const letrasAlternativas = ['A', 'B', 'C', 'D', 'E'];
+
+        function getToken() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('token') || '8A6AE1';
+        }
+
+        function saveToLocalStorage() {
+            const token = getToken();
+            localStorage.setItem(`sate_answers_${token}`, JSON.stringify(answers));
+            localStorage.setItem(`sate_statuses_${token}`, JSON.stringify(statuses));
+        }
+
+        function loadFromLocalStorage() {
+            const token = getToken();
+            const savedAnswers = localStorage.getItem(`sate_answers_${token}`);
+            const savedStatuses = localStorage.getItem(`sate_statuses_${token}`);
+
+            if (savedAnswers && savedStatuses) {
+                answers = JSON.parse(savedAnswers);
+                statuses = JSON.parse(savedStatuses);
+                return true;
+            }
+            return false;
+        }
+
+        function loadQuestions(token) {
+            axios.get(`http://10.91.249.10:3069/form/${token}`)
+                .then(response => {
+                    const data = response.data;
+                    if (data && Array.isArray(data.results)) {
+                        questions = data.results.map(item => ({
+                            id_questao: item.id_questao || item.id, // Salvamos o ID da questão para usar no gabarito
+                            text: item.titulo,
+                            options: [
+                                item.resposta_a,
+                                item.resposta_b,
+                                item.resposta_c,
+                                item.resposta_d,
+                                item.resposta_e
+                            ],
+                            attachment: item.url_anexo
+                        }));
+
+                        // Tenta recuperar respostas do localStorage; se não houver, cria arrays vazios
+                        const hasSavedData = loadFromLocalStorage();
+                        if (!hasSavedData) {
+                            answers = Array(questions.length).fill(null);
+                            statuses = Array(questions.length).fill('unvisited');
+                        }
+
+                        renderQuestion(currentIndex);
+                        renderAside();
+                        updateSummary();
+                    } else {
+                        console.error('Formato de resposta inesperado', data);
+                    }
+                })
+                .catch(err => {
+                    console.error('Erro ao buscar as questões', err);
+                });
+        }
 
         const qText = document.getElementById('question-text');
         const optionsContainer = document.getElementById('options-container');
@@ -165,29 +180,41 @@
         const questList = document.getElementById('quest-list');
         const answeredCountEl = document.getElementById('answered-count');
         const blankCountEl = document.getElementById('blank-count');
+
         document.getElementById('closeModal').addEventListener('click', () => {
-
             document.getElementById('resultModal').classList.remove('active');
-
         });
 
-
         function renderQuestion(i) {
-
             const q = questions[i];
+            if (!q) return;
 
             currentNumber.textContent = i + 1;
-            qText.textContent = q.text;
+            qText.innerHTML = '';
+
+            if (q.attachment) {
+                const img = document.createElement('img');
+                img.src = q.attachment;
+                img.alt = 'anexo da questão';
+                img.style.maxWidth = '100%';
+                img.style.display = 'block';
+                img.style.marginBottom = '12px';
+                qText.appendChild(img);
+            }
+
+            const textNode = document.createTextNode(q.text || '');
+            qText.appendChild(textNode);
             optionsContainer.innerHTML = '';
 
-            q.options.forEach((opt, idx) => {
+            (q.options || []).forEach((opt, idx) => {
+                if (!opt) return; // Não renderiza opções nulas/vazias
 
                 const wrap = document.createElement('div');
                 wrap.className = 'question-letter option';
 
                 const circle = document.createElement('div');
                 circle.className = 'question-circles';
-                circle.textContent = String.fromCharCode(97 + idx);
+                circle.textContent = letrasAlternativas[idx];
 
                 const p = document.createElement('p');
                 p.innerHTML = opt;
@@ -196,15 +223,15 @@
                 wrap.appendChild(p);
 
                 wrap.addEventListener('click', () => {
-
                     answers[currentIndex] = idx;
                     statuses[currentIndex] = 'answered';
+
+                    saveToLocalStorage(); // Salva sempre que houver clique
 
                     renderQuestion(currentIndex);
                     renderAside();
                     updateSummary();
                     updateClearButton();
-
                 });
 
                 if (answers[i] === idx) {
@@ -212,20 +239,16 @@
                 }
 
                 optionsContainer.appendChild(wrap);
-
             });
 
             updateClearButton();
         }
 
         function renderAside() {
-
             questList.innerHTML = '';
 
             questions.forEach((_, idx) => {
-
                 const btn = document.createElement('div');
-
                 btn.className = 'circle-question-example question-button';
                 btn.textContent = idx + 1;
 
@@ -234,129 +257,146 @@
                 if (idx === currentIndex) btn.classList.add('current');
 
                 btn.addEventListener('click', () => {
-
                     currentIndex = idx;
                     renderQuestion(currentIndex);
                     renderAside();
-
                 });
 
                 questList.appendChild(btn);
-
             });
         }
 
         function updateSummary() {
-
-            const answered = statuses.filter(s => s === 'answered').length;
+            const answered = answers.filter(a => a !== null).length;
             const blank = answers.filter(a => a === null).length;
-
             answeredCountEl.textContent = answered;
             blankCountEl.textContent = blank;
         }
 
         function updateClearButton() {
-
             const clearBtn = document.getElementById('clearBtn');
-
-            clearBtn.style.display = answers[currentIndex] !== null
-                ? 'inline-block'
-                : 'none';
-
+            clearBtn.style.display = answers[currentIndex] !== null ? 'inline-block' : 'none';
         }
 
         document.getElementById('nextBtn').addEventListener('click', () => {
-
             if (answers[currentIndex] === null) {
                 statuses[currentIndex] = 'skipped';
-            } else {
-                statuses[currentIndex] = 'answered';
             }
+            saveToLocalStorage();
 
             if (currentIndex < questions.length - 1) currentIndex++;
-
             renderQuestion(currentIndex);
             renderAside();
             updateSummary();
-
         });
 
         document.getElementById('prevBtn').addEventListener('click', () => {
-
             if (currentIndex > 0) currentIndex--;
-
             renderQuestion(currentIndex);
             renderAside();
-
         });
 
         document.getElementById('clearBtn').addEventListener('click', () => {
-
             answers[currentIndex] = null;
             statuses[currentIndex] = 'unvisited';
+            saveToLocalStorage();
 
             renderQuestion(currentIndex);
             renderAside();
             updateSummary();
-
         });
 
 
-        // 🔥 FINALIZAR PROVA COM MODAL + GRÁFICO
-        document.getElementById('finishBtn').addEventListener('click', () => {
+        document.getElementById('finishBtn').addEventListener('click', async () => {
+            const token = getToken();
+            const finishBtn = document.getElementById('finishBtn');
+            finishBtn.textContent = "Enviando...";
+            finishBtn.disabled = true;
 
-            let correct = 0;
-            let wrong = 0;
+            try {
+                // 1. Enviar as respostas UMA POR UMA para não sobrecarregar a API
+                for (let i = 0; i < questions.length; i++) {
+                    if (answers[i] !== null) {
+                        const payload = {
+                            nome: "Biston",
+                            email: "biston.nunes@gmail.com",
+                            id: 1,
+                            resposta_aluno: letrasAlternativas[answers[i]]
+                        };
 
-            questions.forEach((q, i) => {
-
-                if (answers[i] === null) return;
-
-                if (answers[i] === q.correct) {
-                    correct++;
-                } else {
-                    wrong++;
+                        console.log(payload);
+                        await axios.post(
+                            `http://10.91.236.181:3069/form/question/8A6AE1`,
+                            JSON.stringify(payload),
+                            { headers: { 'Content-Type': 'application/json' } }
+                        );
+                    }
                 }
 
-            });
+                const body = { nome: 'Biston' };
+                const response = await axios.post(
+                    `http://10.91.236.181:3069/form/questions/${token}`,
+                    JSON.stringify(body),
+                    { headers: { 'Content-Type': 'application/json' } }
+                );
+                const resultadosDaApi = response.data.results || [];
 
-            const blank = questions.length - (correct + wrong);
-            const percent = Math.round((correct / questions.length) * 100);
 
-            document.getElementById('correctCount').textContent = correct;
-            document.getElementById('wrongCount').textContent = wrong;
-            document.getElementById('percentCount').textContent = percent + '%';
+                // 3. Contabilizar os acertos usando os dados que vieram do Back-end
+                let correct = 0;
+                let wrong = 0;
 
-            document.getElementById('resultModal').classList.add('active');
+                resultadosDaApi.forEach(item => {
+                    if (item.resposta_aluno === item.resposta_certa) {
+                        correct++;
+                    } else {
+                        wrong++;
+                    }
+                });
 
-            createChart(correct, wrong, blank);
+                const blank = questions.length - (correct + wrong);
+                const percent = questions.length ? Math.round((correct / questions.length) * 100) : 0;
 
+                // 4. Atualizar os números e o Gráfico na tela
+                document.getElementById('correctCount').textContent = correct;
+                document.getElementById('wrongCount').textContent = wrong;
+                document.getElementById('percentCount').textContent = percent + '%';
+
+                document.getElementById('resultModal').classList.add('active');
+                createChart(correct, wrong, blank);
+
+            } catch (erro) {
+                // detailed error output
+                console.error('Finalizar prova falhou', erro);
+                if (erro.response) {
+                    console.error('Erro do Servidor:', erro.response.status, erro.response.data);
+                    alert(`Erro ${erro.response.status}. Veja o console.`);
+                } else {
+                    console.error('Erro de rede ou outro:', erro.message);
+                    alert('Ocorreu um erro. Verifique o console ou conexão.');
+                }
+            } finally {
+                finishBtn.textContent = "Finalizar prova";
+                finishBtn.disabled = false;
+            }
         });
 
+
         let myChart = null;
-
         function createChart(correct, wrong, blank) {
-
             const ctx = document.getElementById('resultChart').getContext('2d');
-
-            // Se já existir gráfico, destrói
             if (myChart) {
                 myChart.destroy();
             }
 
             Chart.defaults.font.family = "'Segoe UI', 'Helvetica', 'Arial', sans-serif";
-
             myChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: ['Acertos', 'Erros', 'Em branco'],
                     datasets: [{
                         data: [correct, wrong, blank],
-                        backgroundColor: [
-                            '#28a745',
-                            '#dc3545',
-                            '#e2e8f0'
-                        ],
+                        backgroundColor: ['#28a745', '#dc3545', '#e2e8f0'],
                         borderWidth: 0,
                         hoverOffset: 4
                     }]
@@ -369,31 +409,21 @@
             });
         }
 
-
-
-        // estilos dinamicos
         const style = document.createElement('style');
-
         style.innerHTML = `
-.option{cursor:pointer;padding:8px;}
-.option.selected{background:#fff2d1;border-radius:6px;}
-.option.selected .question-circles{background:black;color:white;}
-.question-button{cursor:pointer;width:30px;height:30px;display:inline-flex;justify-content:center;align-items:center;margin:4px;border-radius:50%;border:1px solid rgb(35,49,177);}
-.question-button.answered{background:black;color:white;border-color:black;}
-.question-button.skipped{background:red;color:white;border-color:red;}
-.question-button.current{background:rgb(35,49,177);color:#fff;border-color:rgb(35,49,177);box-shadow:0 0 0 3px rgba(35,49,177,0.12);}
-`;
-
+        .option{cursor:pointer;padding:8px;}
+        .option.selected{background:#fff2d1;border-radius:6px;}
+        .option.selected .question-circles{background:black;color:white;}
+        .question-button{cursor:pointer;width:30px;height:30px;display:inline-flex;justify-content:center;align-items:center;margin:4px;border-radius:50%;border:1px solid rgb(35,49,177);}
+        .question-button.answered{background:black;color:white;border-color:black;}
+        .question-button.skipped{background:red;color:white;border-color:red;}
+        .question-button.current{background:rgb(35,49,177);color:#fff;border-color:rgb(35,49,177);box-shadow:0 0 0 3px rgba(35,49,177,0.12);}
+        `;
         document.head.appendChild(style);
 
-        renderQuestion(currentIndex);
-        renderAside();
-        updateSummary();
+        loadQuestions(getToken());
 
     </script>
-
-
-
 </body>
 
 </html>
